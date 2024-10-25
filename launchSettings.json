@@ -4,7 +4,9 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "clientswh": "StartDebugging"
+        "clientswh": "StartDebugging",
+        "mongo": "StartWithoutDebugging",
+        "postgres": "StartWithoutDebugging"
       }
     }
   }

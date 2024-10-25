@@ -31,7 +31,7 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 //postgresql db
-
+Console.WriteLine(configuration.GetConnectionString("DefaultConnection"));
 services.AddDbContext<ClientSWHDbContext>(options =>
 {
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
