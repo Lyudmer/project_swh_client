@@ -86,7 +86,7 @@ namespace ClientSWH.Controllers
 
            var result= await _pkgService.HistoriPkgByPid(pkgSend.Pid);
             if (result == null)
-                return BadRequest(ModelState);
+                return Ok($"По пакету {pkgSend.Pid} истории нет");
             else
                 return Ok(result);
         }
@@ -98,7 +98,7 @@ namespace ClientSWH.Controllers
 
             var result = await _pkgService.GetAll();
             if (result == null)
-                return BadRequest(ModelState);
+                return Ok("Пакеты не найдены");
             else
                 return Ok(result);
         }
@@ -110,7 +110,7 @@ namespace ClientSWH.Controllers
 
             var result = await _pkgService.GetPkgId(pkgSend.Pid);
             if (result == null)
-                return BadRequest(ModelState);
+                return Ok("Пакет не найден");
             else
                 return Ok(result);
         } 
@@ -122,7 +122,7 @@ namespace ClientSWH.Controllers
 
             var result = await _pkgService.GetDocsPkg(pkgSend.Pid);
             if (result == null)
-                return BadRequest(ModelState);
+                return Ok("Документы не найдены");
             else
                 return Ok(result);
         }

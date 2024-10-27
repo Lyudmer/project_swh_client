@@ -10,6 +10,7 @@ namespace ClientSWH.DataAccess.Entities
         public StatusEntity Status { get; set; }
         public string Comment { get; set; }=string.Empty;
         public DateTime CreateDate { get; set; }
+        public PackageEntity Package { get; set; }
 
     }
 }

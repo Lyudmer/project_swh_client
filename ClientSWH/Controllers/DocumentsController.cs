@@ -20,9 +20,9 @@ namespace ClientSWH.Controllers
                 return BadRequest(ModelState);
 
             var result = await _docService.GetDocId(docR.Id);
-            if (result == null) 
-                return BadRequest(ModelState);
-            else  return Ok(result);
+            if (result == null)
+                return Ok("Документ не найден");
+            else return Ok(result);
         } 
         [HttpPost("GetDocRecord")]
         public async Task<IActionResult> GetDocRecId(DocRequest docR)
@@ -32,7 +32,7 @@ namespace ClientSWH.Controllers
                 
             var result = await _docService.GetDocRecord(docR.Id);
             if (result == null)
-                return BadRequest(ModelState);
+                return Ok("Документ не найден");
             else return Ok(result);
         }
         [HttpPost("DeleteDoc")]

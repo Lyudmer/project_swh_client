@@ -68,7 +68,11 @@ namespace ClienSWH.XMLParser
                             if (dRecordId is not null) resDoc++;
                         }
                     }
-                    if (cXmlDoc != resDoc) return $"В исходном xml документов{cXmlDoc}, загружено {resDoc}";
+                    if (cXmlDoc != resDoc)
+                    {
+                        var hPkg = HistoryPkg.Create(Pid, 0, 0, "Load Package", DateTime.UtcNow);
+                        return $"В исходном xml документов{cXmlDoc}, загружено {resDoc}";
+                    }
                 }
             }
             catch (Exception ex)

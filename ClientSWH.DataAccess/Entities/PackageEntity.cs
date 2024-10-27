@@ -9,6 +9,7 @@
         public Guid UserId { get; set; }
         public UserEntity User { get; set; }
         public ICollection<DocumentEntity> Documents { get; set; } =  [];
+        public ICollection<HistoryPkgEntity> HistoryPkgs { get; set; } = [];
         public int StatusId { get; set; }
         public StatusEntity Status { get; set; }
         

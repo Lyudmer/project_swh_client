@@ -21,6 +21,11 @@ namespace ClientSWH.DataAccess.Configurations
                 .WithOne(d => d.Package)
                 .HasForeignKey(d => d.Pid)
                 .OnDelete(DeleteBehavior.Cascade);
+            builder
+               .HasMany(p => p.HistoryPkgs)
+               .WithOne(h => h.Package)
+               .HasForeignKey(d => d.Pid)
+               .OnDelete(DeleteBehavior.Cascade);
             //свойства полей
             builder.Property(p => p.Id)
                    .IsRequired()

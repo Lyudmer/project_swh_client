@@ -27,5 +27,6 @@ namespace ClientSWH.Core.Models
             return package;
         }
         public ICollection<Document> Documents { get; set; } = [];
+        public ICollection<HistoryPkg> HistoryPkgs { get; set; } = [];
     }
 }

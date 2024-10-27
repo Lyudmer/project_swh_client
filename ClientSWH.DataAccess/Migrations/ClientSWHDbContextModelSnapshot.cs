@@ -17,7 +17,7 @@ namespace ClientSWH.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -122,13 +122,15 @@ namespace ClientSWH.DataAccess.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("oldst");
 
-                    b.Property<int>("Pid")
-                        .HasColumnType("integer");
+                    b.Property<long>("Pid")
+                        .HasColumnType("bigint");
 
                     b.Property<int?>("StatusId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Pid");
 
                     b.HasIndex("StatusId");
 
@@ -254,9 +256,17 @@ namespace ClientSWH.DataAccess.Migrations
 
             modelBuilder.Entity("ClientSWH.DataAccess.Entities.HistoryPkgEntity", b =>
                 {
+                    b.HasOne("ClientSWH.DataAccess.Entities.PackageEntity", "Package")
+                        .WithMany("HistoryPkgs")
+                        .HasForeignKey("Pid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ClientSWH.DataAccess.Entities.StatusEntity", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId");
+
+                    b.Navigation("Package");
 
                     b.Navigation("Status");
                 });
@@ -283,6 +293,8 @@ namespace ClientSWH.DataAccess.Migrations
             modelBuilder.Entity("ClientSWH.DataAccess.Entities.PackageEntity", b =>
                 {
                     b.Navigation("Documents");
+
+                    b.Navigation("HistoryPkgs");
                 });
 
             modelBuilder.Entity("ClientSWH.DataAccess.Entities.UserEntity", b =>

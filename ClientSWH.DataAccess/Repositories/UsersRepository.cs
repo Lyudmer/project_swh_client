@@ -24,8 +24,9 @@ namespace ClientSWH.DataAccess.Repositories
         {
             var userEntity = await _context.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email == email) ?? throw new Exception();
-            return _mapper.Map<User>(userEntity);
+                .FirstOrDefaultAsync(u => u.Email == email) ;
+            if (userEntity == null) return null;
+            else return _mapper.Map<User>(userEntity);
         }
 
         public async Task<Guid> Update(User user)

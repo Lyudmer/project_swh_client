@@ -34,8 +34,8 @@ namespace ClientSWH.DataAccess.Repositories
         {
             var pkgEntity = await _dbContext.Packages
                 .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.Id == Pid) ;
-
+                .FirstOrDefaultAsync(p => p.Id == Pid);
+                
             if (pkgEntity == null) return null;
             else return _mapper.Map<Package>(pkgEntity);
 

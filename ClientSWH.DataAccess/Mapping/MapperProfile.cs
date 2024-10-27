@@ -19,7 +19,8 @@ namespace ClientSWH.DataAccess.Mapping
             CreateMap<UserEntity, User>().ReverseMap();
 
             CreateMap<HistoryPkgEntity, HistoryPkg>().ReverseMap();
-                
+            CreateMap<HistoryPkg, HistoryPkgEntity>().ReverseMap();
+
         }
     }
 }

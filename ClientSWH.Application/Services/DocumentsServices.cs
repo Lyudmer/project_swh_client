@@ -22,7 +22,8 @@ namespace ClientSWH.Application.Services
         public async Task<DocRecord> GetDocRecord(int Id)
         {
            var rDoc = await _documentsRepository.GetById(Id);
-           return  await _docRecordRepository.GetByDocId(rDoc.DocId);
+            if (rDoc == null) return null;
+            else return  await _docRecordRepository.GetByDocId(rDoc.DocId);
         }
         public async Task<bool> DeleteDoc(int Id)
         {

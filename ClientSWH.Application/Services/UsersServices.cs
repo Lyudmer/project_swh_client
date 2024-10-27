@@ -44,13 +44,14 @@ namespace ClientSWH.Application.Services
         public async Task<string> Login(string password, string email)
         {
             var user = await _usersRepository.GetByEmail(email);
+            if (user == null) 
+                return $"Пользователь не найден";
+            else
             if (user.PasswordHash.Length>0)
             {
                 var result = _passwordHasher.Verify(password, user.PasswordHash);
                 if (result == false)
-                {
                     return $"Пользователь не найден";
-                }
               
                 var token = _jwtProvider.GenerateToken(user.Id);
                 var resUser = GetUserId(token);
@@ -58,6 +59,7 @@ namespace ClientSWH.Application.Services
                 return resUser;
             }
             else return $"Пользователь не найден";
+
         }
 
         private string GetUserId(string token)
