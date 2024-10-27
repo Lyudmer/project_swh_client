@@ -25,7 +25,7 @@ namespace ClientSWH.DataAccess.Repositories
         {
             var pkgEntity = await _dbContext.Packages
                 .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.UUID == uuid) ?? throw new Exception();
+                .FirstOrDefaultAsync(p => p.UUID == uuid);
             if (pkgEntity == null)  return null;
             else return _mapper.Map<Package>(pkgEntity);
 
@@ -34,7 +34,7 @@ namespace ClientSWH.DataAccess.Repositories
         {
             var pkgEntity = await _dbContext.Packages
                 .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.Id == Pid) ?? throw new Exception();
+                .FirstOrDefaultAsync(p => p.Id == Pid) ;
 
             if (pkgEntity == null) return null;
             else return _mapper.Map<Package>(pkgEntity);

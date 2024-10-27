@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClienSWH.SendReceivServer",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClienSWH.XMLParser", "ClienSWH.XMLParser\ClienSWH.XMLParser.csproj", "{F0B610DB-E1A5-43F3-9DE2-7EAEB1942E79}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientSVH.Application", "ClientSVH.Application\ClientSVH.Application.csproj", "{1AAFA9E6-6DDD-41B1-A060-41003D1C9760}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientSWH.Application", "ClientSWH.Application\ClientSWH.Application.csproj", "{2C50066E-26BE-49D6-AA63-541C875D19FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientSWH.Core", "ClientSWH.Core\ClientSWH.Core.csproj", "{537C0583-B4B2-4B44-90A0-2C33C1BB9988}"
@@ -47,10 +45,6 @@ Global
 		{F0B610DB-E1A5-43F3-9DE2-7EAEB1942E79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0B610DB-E1A5-43F3-9DE2-7EAEB1942E79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0B610DB-E1A5-43F3-9DE2-7EAEB1942E79}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1AAFA9E6-6DDD-41B1-A060-41003D1C9760}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1AAFA9E6-6DDD-41B1-A060-41003D1C9760}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1AAFA9E6-6DDD-41B1-A060-41003D1C9760}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1AAFA9E6-6DDD-41B1-A060-41003D1C9760}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2C50066E-26BE-49D6-AA63-541C875D19FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C50066E-26BE-49D6-AA63-541C875D19FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C50066E-26BE-49D6-AA63-541C875D19FF}.Release|Any CPU.ActiveCfg = Release|Any CPU

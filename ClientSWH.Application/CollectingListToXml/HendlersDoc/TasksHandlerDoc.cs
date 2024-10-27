@@ -67,11 +67,11 @@ namespace ClientSWH.Application.CollectingListToXml.Hendlers
             var dat = xDoc.Elements().Elements("RegDate").FirstOrDefault()?.Value.ToString();
             var doctext = xDoc.ToString();
             string docCode = tdoc.Contains("CONOSAMENT") ? "02011" : "09999";
-            DateTime DocDate = DateTime.Now;
+            DateTime DocDate = DateTime.Now.Date;
             if (dat is not null)
                 _ = DateTime.TryParse(dat, out DocDate);
-
-            var Doc = Document.Create(LastDocId, Guid.NewGuid(), (num is not null) ? num : string.Empty, DocDate, docCode,
+                
+            var Doc = Document.Create(LastDocId, Guid.NewGuid(), (num is not null) ? num : string.Empty, DocDate.Date, docCode,
                           tdoc, doctext.Length, DopFunction.GetHashMd5(doctext),
                           DopFunction.GetSha256(doctext),
                           Pid, DateTime.UtcNow, DateTime.UtcNow);

@@ -18,8 +18,8 @@ namespace ClientSWH.Core.Models
         public int StatusId { get; set; }
      
         public Guid UUID { get; set; }
-        public DateTime CreateDate { get; set; } = DateTime.UtcNow;
-        public DateTime ModifyDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreateDate { get; set; } 
+        public DateTime ModifyDate { get; set; } 
         public static Package Create(int id, Guid userId, int statusId, Guid uuId, 
                                      DateTime createDate, DateTime modifyDate)
         {

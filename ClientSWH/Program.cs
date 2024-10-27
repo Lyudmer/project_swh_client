@@ -1,4 +1,3 @@
-using ClienSVH.XMLParser;
 using ClientSWH.Application.Interfaces.Auth;
 using ClientSWH.Application.Interfaces;
 using ClientSWH.Application.Services;
@@ -18,6 +17,14 @@ using ClientSWH.SendReceivServer;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using ClienSWH.XMLParser;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,11 +38,15 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 //postgresql db
-Console.WriteLine(configuration.GetConnectionString("DefaultConnection"));
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//Console.WriteLine($"Connection string -- {connectionString}");
+//services.AddDbContext<ClientSWHDbContext>(options => { options.UseNpgsql(connectionString); });
+
 services.AddDbContext<ClientSWHDbContext>(options =>
 {
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 });
+
 services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
@@ -71,14 +82,27 @@ services.AddTransient<IReceivFromServer, ReceivFromServer>();
 
 services.AddAutoMapper(typeof(MapperProfile));
 services.AddHttpContextAccessor();
+
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+using (var scope = app.Services.CreateScope())
+{ 
+    var services_db= scope.ServiceProvider;
+    var context = services_db.GetRequiredService<ClientSWHDbContext>();
+
+    if (context.Database.CanConnect() && context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+   
 }
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 app.UseCookiePolicy(new CookiePolicyOptions
 {
     MinimumSameSitePolicy = SameSiteMode.Strict,

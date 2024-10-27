@@ -2,6 +2,9 @@
 using ClientSWH.DataAccess.Entities;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
 
 
@@ -16,7 +19,7 @@ namespace ClientSWH.DataAccess
         public DbSet<DocumentEntity> Document { get; set; }
         public DbSet<StatusEntity> Status { get; set; }
         public DbSet<HistoryPkgEntity> HistoryPkg { get; set; }
-      
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
@@ -33,6 +36,7 @@ namespace ClientSWH.DataAccess
         
        
     }
+    
     //public class MyAppDbContextFactory : IDesignTimeDbContextFactory<ClientSWHDbContext>
     //{
     //    public ClientSWHDbContext CreateDbContext(string[] args)

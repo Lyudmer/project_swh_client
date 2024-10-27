@@ -8,6 +8,15 @@
         "mongo": "StartWithoutDebugging",
         "postgres": "StartWithoutDebugging"
       }
+    },
+    "swh": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "clientswh": "StartDebugging",
+        "mongo": "StartWithoutDebugging",
+        "postgres": "StartWithoutDebugging"
+      }
     }
   }
 }
