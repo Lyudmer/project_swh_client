@@ -2,7 +2,7 @@
 
 namespace ClientSWH.Contracts
 {
-    record class DocRecordResponse
+    public record DocRecordResponse
     (
         Guid Id,
         Guid DocId,
