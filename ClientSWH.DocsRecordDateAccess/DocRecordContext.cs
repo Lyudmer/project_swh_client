@@ -1,39 +1,20 @@
 ﻿
-using ClientSWH.DocsRecordCore.Abstraction;
 using ClientSWH.DocsRecordCore.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace ClientSWH.DocsRecordDataAccess
 {
-    public class DocRecordContext : IDocRecordContext
+    public class DocRecordContext 
     {
-        private readonly IMongoDatabase _database = null;
-        public DocRecordContext(IOptions<Settings> settings)
+        public IMongoClient _mongoClient;
+        public IMongoDatabase _mongoDatabase;
+        public IMongoCollection<DocRecord> DocRecords { get; set; }
+        public DocRecordContext(IMongoClient _client)
         {
-            var client = new MongoClient(settings.Value.ConnectionString);
-            if (client != null)
-            {
-                _database = client.GetDatabase(settings.Value.Database);
-            }
+            _mongoClient = _client;
+            _mongoDatabase = _mongoClient.GetDatabase("DocRecordSvh");
+            DocRecords = _mongoDatabase.GetCollection<DocRecord>("DocRecord");
         }
-        public IMongoCollection<DocRecord> DocRecords
-        {
-            get
-            {
-                return GeDocRecord();
-            }
-        }
-        private  IMongoCollection<DocRecord> GeDocRecord()
-        {
-            var collection = _database.GetCollection<DocRecord>("DocRecord");
-            if (collection != null)
-                return collection;
-            else
-            {
-                _database.CreateCollection("DocRecord");
-                return _database.GetCollection<DocRecord>("DocRecord");
-            }
-        }
+
     }
 }

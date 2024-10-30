@@ -126,6 +126,18 @@ namespace ClientSWH.Controllers
             else
                 return Ok(result);
         }
+        [HttpPost("GetPkgXml")]
+        public async Task<IActionResult> GetPkgXml(PackageRequest pkgSend)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _pkgService.GetPkgXml(pkgSend.Pid);
+            if (result == string.Empty)
+                return Ok("Документы не найдены");
+            else
+                return Ok(result);
+        }
         [HttpPost("DelPackage")]
         public async Task<IActionResult> DeletePkg(PackageRequest pkgSend)
         {

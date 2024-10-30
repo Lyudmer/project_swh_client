@@ -1,5 +1,5 @@
 ﻿using ClientSWH.Core.Models;
-using ClientSWH.DocsRecordCore.Abstraction;
+
 using System.Xml.Linq;
 
 namespace ClientSWH.Application.CollectingListToXml

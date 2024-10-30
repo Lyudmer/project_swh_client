@@ -18,8 +18,10 @@ namespace ClientSWH.DataAccess.Repositories
         {
             var PkgEntity = _mapper.Map<PackageEntity>(Pkg);
             var resPkg= await _dbContext.AddAsync(PkgEntity);
-            await _dbContext.SaveChangesAsync();
-            return _mapper.Map<Package>(resPkg.Entity);
+            var resSt=await _dbContext.SaveChangesAsync();
+            if (resSt==1)
+                return _mapper.Map<Package>(resPkg.Entity);
+            else return null;
         }
         public async Task<Package> GetByUUId(Guid uuid)
         {

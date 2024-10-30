@@ -32,5 +32,14 @@ namespace ClientSWH.Controllers
            var result = await _statusService.DelStatus(statusRequest.Id);
             return Ok(result);
         }
+        [HttpGet("GeetStatus")]
+        public async Task<IActionResult> GetStatus()
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _statusService.GetAllStatus();
+            return Ok(result);
+        }
     }
 }

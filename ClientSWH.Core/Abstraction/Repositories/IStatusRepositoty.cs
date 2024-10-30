@@ -9,5 +9,6 @@ namespace ClientSWH.Core.Abstraction.Repositories
         Task Delete(int Id);
         Task Update(Status status);
         Task<Status> GetById(int Id);
+        Task<List<Status>> GetAllSt();
     }
 }

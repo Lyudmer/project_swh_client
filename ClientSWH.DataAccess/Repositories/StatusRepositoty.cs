@@ -39,5 +39,15 @@ namespace ClientSWH.DataAccess.Repositories
                 .FirstOrDefaultAsync(s => s.Id == Id) ?? throw new Exception();
             return _mapper.Map<Status>(stEntity);
         }
+        public async Task<List<Status>> GetAllSt()
+        {
+            var query = _dbContext.Status
+                .AsNoTracking()
+                .OrderBy(p => p.Id);
+                
+            var stList = await query.ToListAsync();
+            if (stList == null) return null;
+            else return _mapper.Map<List<Status>>(stList);
+        }
     }
 }

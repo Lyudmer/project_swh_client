@@ -11,11 +11,10 @@ services:
       - "8080:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - MONGODB_URL=mongodb://mongodb:27017/DocRecordSvh
+      - "DatabaseSettings__MongoConnectionString=mongodb://studadmin:studadmin@svhmongodb:27017"
     depends_on:
       - postgres
       - mongo
-
   postgres:
     container_name: postgres
     image: postgres:16.4 
@@ -28,23 +27,21 @@ services:
       - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
     ports:
       - "5432:5432"
-
   mongo:
     image: mongo:latest
-    container_name: mongo
+    container_name: svhmongodb
     restart: always
     environment:
-        MONGO_INITDB_DATABASE: DocRecordSvh
-        MONGO_INITDB_ROOT_USERNAME: studadmin
-        MONGO_INITDB_ROOT_PASSWORD: studadmin
-    hostname: mongodb-server
+      MONGO_INITDB_ROOT_USERNAME: studadmin
+      MONGO_INITDB_ROOT_PASSWORD: studadmin
     ports:
-       -  27017:27017
+      - "27017:27017"
     volumes:
-       - ./mongodb:/data/db
-      
+      - mongosvh:/data/db
+
+  
 volumes:
   pgdata: 
-  mongodb: 
+  mongosvh: 
 
 

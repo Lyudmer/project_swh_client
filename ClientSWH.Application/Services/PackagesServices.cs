@@ -64,7 +64,10 @@ namespace ClientSWH.Application.Services
         {
             return await _documentsRepository.GetByFilter(Pid);
         }
-       
+        public async Task<string> GetPkgXml(int Pid)
+        {
+            return await _sendToServer.PkgXml(Pid);
+        }
         public async Task<string> DeletePkg(int Pid)
         {
             if (Pid != 0)

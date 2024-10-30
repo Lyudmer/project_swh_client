@@ -5,5 +5,6 @@
         Task<int> SendPaskageToServer(int Pid);
         Task<bool> SendDelPkgToServer(int Pit);
         Task<int> PkgFLK(int Pit);
+        Task<string> PkgXml(int Pit);
     }
 }

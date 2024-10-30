@@ -36,7 +36,7 @@ namespace ClientSWH.DataAccess
         
        
     }
-    
+
     //public class MyAppDbContextFactory : IDesignTimeDbContextFactory<ClientSWHDbContext>
     //{
     //    public ClientSWHDbContext CreateDbContext(string[] args)

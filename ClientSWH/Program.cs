@@ -6,7 +6,6 @@ using ClientSWH.Core.Abstraction.Services;
 using ClientSWH.DataAccess.Mapping;
 using ClientSWH.DataAccess.Repositories;
 using ClientSWH.DataAccess;
-using ClientSWH.DocsRecordCore.Abstraction;
 using ClientSWH.DocsRecordDataAccess;
 using ClientSWH.Extensions;
 using ClientSWH.Infrastructure;
@@ -17,14 +16,12 @@ using ClientSWH.SendReceivServer;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
-using System.Security.Cryptography;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+
 using ClienSWH.XMLParser;
+using MongoDB.Bson;
+using ClientSWH.DocsRecordCore.Models;
+using ClientSWH.DocsRecordCore.Abstraction;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,15 +48,13 @@ services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
 //mongodb
-services.Configure<Settings>(configuration.GetSection("MongoConnection"));
-
-
-services.AddTransient<IMongoClient>(_ =>
+var mongoConnectionString = configuration.GetValue<string>("MongoConnection:ConnectionString");
+services.AddSingleton<IMongoClient>(x =>
 {
-    var connectionString = configuration.GetSection("MongoConnection:ConnectionString")?.Value;
-
-    return new MongoClient(connectionString);
+    return new MongoClient(mongoConnectionString);
 });
+services.AddTransient<DocRecordContext>();
+
 services.Configure<JwtOptions>(configuration.GetSection("JWT"));
 services.AddTransient<IUsersService, UsersService>();
 services.AddTransient<IPackagesServices, PackagesServices>();
@@ -70,6 +65,7 @@ services.AddTransient<IUsersRepository, UsersRepository>();
 services.AddTransient<IPackagesRepository, PackagesRepository>();
 services.AddTransient<IDocumentsRepository, DocumentsRepository>();
 services.AddTransient<IDocRecordRepository, DocRecordRepository>();
+
 services.AddTransient<IJwtProvider, JwtProvider>();
 services.AddTransient<IPasswordHasher, PasswordHasher>();
 
@@ -97,8 +93,9 @@ using (var scope = app.Services.CreateScope())
     }
    
 }
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
         app.UseSwaggerUI();

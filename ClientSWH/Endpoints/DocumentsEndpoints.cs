@@ -32,6 +32,6 @@ namespace ClientSWH.Endpoints
             await ((IDocumentsServices)docService).DeleteDoc(Id);
             return Results.Ok();
         } 
-       
+      
     }
 }

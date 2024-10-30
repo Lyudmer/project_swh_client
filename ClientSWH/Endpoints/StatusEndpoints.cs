@@ -10,10 +10,17 @@ namespace ClientSWH.Endpoints
     {
         public static IEndpointRouteBuilder MapStatusEndpoints(this IEndpointRouteBuilder app)
         {
+            app.MapPost("AllStatus", AllSt);
             app.MapPost("AddStatus", AddSt);
             app.MapPost("DelStatus", DelSt);
 
             return app;
+        }
+  
+        private static async Task<IResult> AllSt( StatusServices statusService)
+        {
+            await ((IStatusServices)statusService).GetAllStatus();
+            return Results.Ok();
         }
         private static async Task<IResult> AddSt(StatusAddRequest request, StatusServices statusService)
         {

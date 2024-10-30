@@ -3,19 +3,17 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ClientSWH.DocsRecordCore.Models
 {
-    public class DocRecord
+    public class DocRecord : DocRecordBase
     {
+        public DocRecord(string docId, string doctext)
+        {
+            Id= ObjectId.GenerateNewId();
+            DocId = docId;
+            DocText = doctext;
+        }
 
         [BsonId]
         public ObjectId Id { get; set; }
-        public string DocId { get; set; }
-        public string DocText { get; set; } = null!;
-        public static DocRecord Create( string docId, string docText)
-        {
-            var docrecord = new DocRecord() {DocId = docId, DocText = docText};
-            return docrecord;
-        }
-
     }
 
 

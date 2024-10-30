@@ -2,29 +2,32 @@
 using ClientSWH.DocsRecordCore.Abstraction;
 using ClientSWH.DocsRecordCore.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-
+using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Collections;
+using System;
+using static System.Collections.Specialized.BitVector32;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace ClientSWH.DocsRecordDataAccess
 {
-    public class DocRecordRepository : IDocRecordRepository
+    public class DocRecordRepository(DocRecordContext mongocontext) : IDocRecordRepository
     {
 
-        private readonly IDocRecordContext _docRecordCollection;
-        public DocRecordRepository(IOptions<Settings> settings)
-        { 
-             _docRecordCollection = new DocRecordContext(settings);
-
-        }
-        public async Task<DocRecord> GetByDocId(Guid docId)
+        private readonly DocRecordContext _mongocontext = mongocontext;
+        
+        public async Task<DocRecordBase> GetByDocId(string docId)
         {
-           // var filter = Builders<DocRecord>.Filter.Eq("DocId", docId.ToString());
-
             try
             {
-               var resRec= await _docRecordCollection.DocRecords
-                                .Find(x => x.DocId == docId.ToString())
+                var query = await _mongocontext.DocRecords
+                                .Find(x => x.DocId.Contains(docId))
                                 .FirstOrDefaultAsync();
+                var resRec = new DocRecordBase
+                {
+                    DocText = query.DocText,
+                    DocId = query.DocId
+                };
+
                 if (resRec == null) return null;
                 else return resRec;
             }
@@ -33,27 +36,49 @@ namespace ClientSWH.DocsRecordDataAccess
                 return null;
             }
         }
-        public async Task<string> AddRecord(DocRecord item)
+        public async Task<string> GetDocTextDocId(string docId)
         {
             try
             {
-                var options = new InsertOneOptions { BypassDocumentValidation = true };
-                await _docRecordCollection.DocRecords.InsertOneAsync(item,options);
 
-                return item.DocId;
+                var query = await _mongocontext.DocRecords
+                                .Find(x => x.DocId.Contains(docId))
+                                .FirstOrDefaultAsync();
+
+               var resDocText= query.DocText;
+
+                if (resDocText == string.Empty) return string.Empty;
+                else return resDocText;
             }
             catch (Exception)
             {
-               return string.Empty;
+                return null;
             }
         }
-        public async Task<long> UpdateRecord(Guid DocId, DocRecord docRecord)
+        public async Task<string> AddRecord(string docId, string doctext)
         {
-            var filter = Builders<DocRecord>.Filter.Eq(s => s.DocId, DocId.ToString());
-            var update = Builders<DocRecord>.Update.Set(s => s.DocText, docRecord.DocText);
             try
             {
-                var resUpdate = await _docRecordCollection.DocRecords.UpdateOneAsync(filter, update);
+                var item = new DocRecord( docId , doctext );
+                await _mongocontext.DocRecords.InsertOneAsync(item);
+                var resRec = await _mongocontext.DocRecords
+                                 .Find(x => x.DocId == docId)
+                                 .FirstOrDefaultAsync();
+                if (resRec == null) return string.Empty;
+                else return resRec.Id.ToString();
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+        public async Task<long> UpdateRecord(DocRecord item)
+        {
+            var filter = Builders<DocRecord>.Filter.Eq(s => s.DocId, item.DocId);
+            var update = Builders<DocRecord>.Update.Set(s => s.DocText, item.DocText);
+            try
+            {
+                var resUpdate = await _mongocontext.DocRecords.UpdateOneAsync(filter, update);
                 if (resUpdate != null) return resUpdate.ModifiedCount;
                 else return 0;
             }
@@ -67,7 +92,7 @@ namespace ClientSWH.DocsRecordDataAccess
         {
             try
             {
-                var resDel = await _docRecordCollection.DocRecords.DeleteOneAsync(x => x.DocId == Docid.ToString());
+                var resDel = await _mongocontext.DocRecords.DeleteOneAsync(x => x.DocId == Docid);
                 if (resDel != null) return resDel.DeletedCount;
                 else return 0;
             }
@@ -76,7 +101,13 @@ namespace ClientSWH.DocsRecordDataAccess
                 return 0;
             }
         }
-
-
+        public async Task CreateRecord(DocRecord item)
+        {
+            await _mongocontext.DocRecords.InsertOneAsync(item);
+        }
+        public async Task<IEnumerable<DocRecord>> GetRecords()
+        {
+            return await _mongocontext.DocRecords.Find(x => true).ToListAsync();
+        }
     }
 }

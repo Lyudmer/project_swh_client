@@ -3,9 +3,9 @@ using ClientSWH.Application.Common;
 using ClientSWH.Application.Interfaces;
 using ClientSWH.Core.Abstraction.Repositories;
 using ClientSWH.Core.Models;
-
 using ClientSWH.DocsRecordCore.Abstraction;
 using ClientSWH.DocsRecordCore.Models;
+using ClientSWH.DocsRecordDataAccess;
 using ClientSWH.SendReceivServer.Consumer;
 using System.Xml.Linq;
 namespace ClientSWH.SendReceivServer
@@ -22,7 +22,7 @@ namespace ClientSWH.SendReceivServer
     }
     public class ReceivFromServer(IRabbitMQConsumer rabbitMQConsumer,
             IPackagesRepository pkgRepository, IDocumentsRepository docRepository,
-            IDocRecordRepository docRecordRepository,
+             IDocRecordRepository docRecordRepository,
             IHistoryPkgRepository historyPkgRepository) : IReceivFromServer
     {
         private readonly IPackagesRepository _pkgRepository = pkgRepository;
@@ -146,7 +146,7 @@ namespace ClientSWH.SendReceivServer
                 XDocument xDoc = XDocument.Load(resRecord.DocRecord);
                 if (xDoc != null)
                 {
-                   
+                    int resDoc = 0;
                     var docDate = ConverterValue.ConvertTo<DateTime>((xDoc.Elements().Elements().FirstOrDefault(n => n.Name == "RegDate")?.Value is not null).ToString());
                     var doctext = xDoc.ToString();
                     var docNum = (xDoc.Elements().Elements().FirstOrDefault(n => n.Name == "RegNum")?.Value is not null).ToString();
@@ -161,9 +161,9 @@ namespace ClientSWH.SendReceivServer
                     Doc = await _docRepository.Add(Doc);
                     if (Doc is not null)
                     {
-                        DocRecord dRecord = DocRecord.Create( Doc.DocId.ToString(), doctext);
-                        var dRecordId = await _docRecordRepository.AddRecord(dRecord);
-
+                       
+                        var dRecordId = await _docRecordRepository.AddRecord(Doc.DocId.ToString(), doctext);
+                        if (dRecordId != string.Empty) resDoc++;
                     }
                     
                 }

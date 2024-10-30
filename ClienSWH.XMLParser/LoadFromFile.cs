@@ -1,4 +1,4 @@
-﻿using ClientSWH.Application.CollectingListToXml.Hendlers;
+﻿
 using ClientSWH.Application.Common;
 using ClientSWH.Application.Interfaces;
 using ClientSWH.Core.Abstraction.Repositories;
@@ -19,27 +19,29 @@ namespace ClienSWH.XMLParser
     {
         private readonly IPackagesRepository _pkgRepository = pkgRepository;
         private readonly IDocumentsRepository _docRepository = docRepository;
-        private readonly IDocRecordRepository _docRecordRepository= docRecordRepository;
+        private readonly IDocRecordRepository _docRecordRepository = docRecordRepository;
 
 
         public async Task<string> LoadFileXml(Guid userId, string inFile)
         {
             int Pid = _pkgRepository.GetLastPkgId().Result + 1;
+            int resDoc = 0;
+            int cXmlDoc = 0;
             try
             {
                 XDocument xFile = XDocument.Parse(inFile.Trim());
 
                 var xPkg = xFile.Element("Package")?
                     .Elements().Where(p => p.Attributes().Where(a => a.Name.LocalName.Contains("CfgName")).FirstOrDefault()?.Value is not null);
-                int resDoc = 0;
+                
                 if (xPkg is not null)
                 {
                     //create package
                     var Pkg = Package.Create(Pid, userId, 0, Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow);
                     Pkg = await _pkgRepository.Add(Pkg);
                     Pid = Pkg.Id;
-                    int cXmlDoc = xPkg.Count();
-                    // var resProc = new TasksHandlerDoc(_docRecordRepository, _docRepository,xPkg,Pid);
+                    cXmlDoc = xPkg.Count();
+                    // var resProc = new TasksHandlerDoc(_docRecordContext, _docRepository,xPkg,Pid);
                     // var resDoc= resProc.ProcessQueueDoc();
                     foreach (var xDoc in xPkg)
                     {
@@ -63,16 +65,14 @@ namespace ClienSWH.XMLParser
                         Doc = await _docRepository.Add(Doc);
                         if (Doc is not null)
                         {
-                            DocRecord dRecord = DocRecord.Create(Doc.DocId.ToString(), doctext);
-                            var dRecordId = await _docRecordRepository.AddRecord(dRecord);
-                            if (dRecordId is not null) resDoc++;
+                            
+                            var dRecordId = await _docRecordRepository.AddRecord(Doc.DocId.ToString(), doctext);
+                            if (dRecordId.Trim()!=string.Empty) resDoc++;
                         }
                     }
-                    if (cXmlDoc != resDoc)
-                    {
-                        var hPkg = HistoryPkg.Create(Pid, 0, 0, "Load Package", DateTime.UtcNow);
-                        return $"В исходном xml документов{cXmlDoc}, загружено {resDoc}";
-                    }
+                    var hPkg = HistoryPkg.Create(Pid, 0, 0, "Load Package", DateTime.UtcNow);
+                    
+                    
                 }
             }
             catch (Exception ex)
@@ -81,7 +81,7 @@ namespace ClienSWH.XMLParser
 
             }
 
-            return $"Создан пакет {Pid}";
+            return $"Создан пакет {Pid}, В исходном xml документов{cXmlDoc}, загружено {resDoc}";
         }
 
     }

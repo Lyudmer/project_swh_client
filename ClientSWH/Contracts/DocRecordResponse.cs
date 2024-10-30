@@ -1,13 +1,11 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using ClientSWH.DocsRecordCore.Models;
+
 
 namespace ClientSWH.Contracts
 {
-    public record DocRecordResponse
-    (
-        Guid Id,
-        Guid DocId,
-        string DocText,
-        DateTime CreateDate,
-        DateTime ModifyDate
-     );
+    public class DocRecordResponse
+    {
+        public IEnumerable<DocRecord> MongoDocRecord { get; set; }
+
+    }
 }

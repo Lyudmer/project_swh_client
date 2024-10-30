@@ -19,7 +19,7 @@ namespace ClientSWH.Application.Services
 
         public async Task<string> DelStatus(int Id)
         {
-            var status = await _statusRepository.GetById(Id) ?? throw new Exception("Invalid Id Status");
+            var status = await _statusRepository.GetById(Id);
             if (status != null)
             {
                  await _statusRepository.Delete(Id);
@@ -29,7 +29,16 @@ namespace ClientSWH.Application.Services
             else return  "Ошибка удаления статуса"; 
 
         }
+        public async Task<List<Status>> GetAllStatus()
+        {
+            var status = await _statusRepository.GetAllSt();
+            if (status != null)
+            {
+                return status;
+            }
+            else return null;
 
-      
+        }
+
     }
 }

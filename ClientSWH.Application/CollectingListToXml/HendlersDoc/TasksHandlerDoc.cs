@@ -2,27 +2,27 @@
 
 using ClientSWH.Application.Common;
 using ClientSWH.Core.Abstraction.Repositories;
-using ClientSWH.Core.Abstraction.Services;
+
 using ClientSWH.Core.Models;
 using ClientSWH.DocsRecordCore.Abstraction;
-using ClientSWH.DocsRecordCore.Models;
-using ClientSWH.DocsRecordDataAccess;
+
 using System.Xml.Linq;
 
 
 namespace ClientSWH.Application.CollectingListToXml.Hendlers
 {
-    public class TasksHandlerDoc(IDocRecordRepository docRecRepository, IDocumentsRepository docRepository,
+    public class TasksHandlerDoc(IDocRecordRepository docRecordRepository, IDocumentsRepository docRepository,
                                  IEnumerable<XElement> inDocs,int Pid) : IHandlerDoc
     {
-        private readonly List<TaskItemDoc> _queueTasksDoc = new List<TaskItemDoc>();
-        public IDocRecordRepository _docRecRepository = docRecRepository;
+        private readonly List<TaskItemDoc> _queueTasksDoc = [];
+        private readonly IDocRecordRepository _docRecordRepository = docRecordRepository;
         private readonly IDocumentsRepository _docRepository = docRepository;
         public int ProcessQueueDoc()
         {
             
             foreach (var item in inDocs)
             {
+
                 var taskitem = new TaskItemDoc(item);
                 _queueTasksDoc.Add(taskitem);
             }
@@ -80,8 +80,7 @@ namespace ClientSWH.Application.CollectingListToXml.Hendlers
             Doc = await _docRepository.Add(Doc);
             if (Doc is not null)
             {
-                DocRecord dRecord = DocRecord.Create(Doc.DocId.ToString(), doctext);
-                var dRecordId = await _docRecRepository.AddRecord(dRecord);
+                var dRecordId = await _docRecordRepository.AddRecord(Doc.DocId.ToString(), doctext);
                 if (dRecordId is not null) return Doc;
             }
 

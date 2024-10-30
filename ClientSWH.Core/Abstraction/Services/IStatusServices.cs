@@ -6,5 +6,7 @@ namespace ClientSWH.Core.Abstraction.Services
     {
         Task<string> AddStatus(Status status);
         Task<string> DelStatus(int Id);
+
+        Task<List<Status>> GetAllStatus();
     }
 }

@@ -1,14 +1,14 @@
 ﻿using ClientSWH.Core.Models;
 using ClientSWH.DocsRecordCore.Abstraction;
+using ClientSWH.DocsRecordDataAccess;
 using System.Xml.Linq;
 
 
 namespace ClientSWH.Application.CollectingListToXml.HendlersElem
 {
-    public class TasksHandlerElem(IDocRecordRepository docRecRepository, List<Document> inDocs) : IHandlerElem
+    public class TasksHandlerElem(IDocRecordRepository docRecordRepository, List<Document> inDocs) : IHandlerElem
     {
-
-        public IDocRecordRepository _docRecRepository = docRecRepository;
+        private readonly IDocRecordRepository _docRecordRepository = docRecordRepository;
 
         private readonly List<TaskItemElem> _queueTasksElem = [];
 
@@ -52,14 +52,17 @@ namespace ClientSWH.Application.CollectingListToXml.HendlersElem
 
         public async Task<XElement> CreateElemXmlFromDoc(Document inDoc)
         {
-            var docRecord = await _docRecRepository.GetByDocId(inDoc.DocId);
-
+            var docRecord = await _docRecordRepository.GetByDocId(inDoc.DocId.ToString());
+           
             if (docRecord is not null)
             {
-                XElement elem_doc = XElement.Parse(docRecord.DocText.ToString());
-                elem_doc.SetAttributeValue("docid", inDoc.DocId.ToString());
-                elem_doc.SetAttributeValue("doctype", inDoc.DocType);
-                return elem_doc;
+                    XElement elem_rec = XElement.Parse(docRecord.DocText.ToString());
+                    elem_rec.SetAttributeValue("docid", inDoc.DocId.ToString());
+                    elem_rec.SetAttributeValue("doctype", inDoc.DocType);
+                   
+                
+
+                return elem_rec;
             }
 
             return null;
